@@ -1,0 +1,33 @@
+---
+- name: Ensure jdks folder exists
+  ansible.builtin.file:
+    path: ~/.m2/jdks/
+    state: directory
+    recurse: true
+
+- name: Install JDK 8
+  ansible.builtin.unarchive:
+    src: "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u432-b06/OpenJDK8U-jdk_x64_linux_hotspot_8u432b06.tar.gz"
+    dest: ~/.m2/jdks/
+    creates: "~/.m2/jdks/jdk-8"
+    remote_src: true
+
+- name: Install jdks
+  ansible.builtin.unarchive:
+    src: "https://github.com/adoptium/temurin{{ item.major }}-binaries/releases/download/jdk-{{ item.version }}/OpenJDK{{ item.major }}U-jdk_x64_linux_hotspot_{{ item.version|replace('+', '_') }}.tar.gz"
+    dest: ~/.m2/jdks/
+    creates: ~/.m2/jdks/jdk-{{ item.version }}
+    remote_src: true
+  loop:
+    - { major: 17, version: "{{ jdks_17 }}" }
+    - { major: 18, version: "{{ jdks_18 }}" }
+    - { major: 21, version: "{{ jdks_21 }}" }
+    - { major: 22, version: "{{ jdks_22 }}" }
+    - { major: 23, version: "{{ jdks_23 }}" }
+
+- name: Install GraalVM-CE Java23
+  ansible.builtin.unarchive:
+    src: https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-23.0.0/graalvm-community-jdk-23.0.0_linux-x64_bin.tar.gz
+    dest: ~/.m2/jdks/
+    creates: ~/.m2/jdks/graalvm-community-openjdk-23+37.1/
+    remote_src: true

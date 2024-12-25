@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  gather_facts: true
+  roles:
+    - ssh-setup
+    - stow
+    - dev
+    - desktop

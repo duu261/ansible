@@ -1,0 +1,5 @@
+---
+source_key: "{{ playbook_dir | dirname }}/.ssh/id_rsa"
+dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+personal: "{{ lookup('env', 'HOME') }}/personal"
+

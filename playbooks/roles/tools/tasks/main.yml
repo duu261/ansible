@@ -1,0 +1,12 @@
+---
+- name: Get openapi generator
+  get_url:
+    url: https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/3.3.4/openapi-generator-cli-3.3.4.jar
+    dest: ~/apps/openapi-generator-cli.jar
+    checksum: sha256:24cb04939110cffcdd7062d2f50c6f61159dc3e0ca3b8aecbae6ade53ad3dc8c
+
+- name: Get jol
+  get_url:
+    url: https://repo1.maven.org/maven2/org/openjdk/jol/jol-cli/0.17/jol-cli-0.17-full.jar
+    dest: ~/apps/jol.jar
+    checksum: sha256:ea8cf31b7dc6c18810ca7aeadcbe7a2b352fb250261b8060ce513e8a99ebcd12

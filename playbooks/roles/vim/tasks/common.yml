@@ -1,0 +1,20 @@
+---
+- name: Create .virtualenvs folder
+  ansible.builtin.file:
+    state: directory
+    recurse: true
+    path: ~/.virtualenvs
+
+- name: Setup neovim virtualenv
+  pip:
+    state: latest
+    name:
+      - pynvim
+      - neovim-remote
+    virtualenv: ~/.virtualenvs/nvim
+    virtualenv_command: /usr/bin/python3 -m venv
+- name: Symlink neovim remote
+  file:
+    src: ~/.virtualenvs/nvim/bin/nvr
+    dest: ~/bin/nvr
+    state: link

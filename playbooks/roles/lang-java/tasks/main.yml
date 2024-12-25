@@ -1,0 +1,159 @@
+---
+- import_role:
+    name: jdks
+
+- name: Create apps/mvnd
+  ansible.builtin.file:
+    state: directory
+    recurse: true
+    path: ~/apps/mvnd
+
+- name: Download mvnd
+  ansible.builtin.unarchive:
+    src: https://github.com/apache/maven-mvnd/releases/download/1.0.2/maven-mvnd-1.0.2-linux-amd64.tar.gz
+    dest: ~/apps/mvnd/
+    remote_src: true
+    extra_opts:
+      - --strip-components=1
+
+- name: Symlink mvnd
+  ansible.builtin.file:
+    state: link
+    src: ~/apps/mvnd/bin/mvnd
+    dest: ~/bin/mvnd
+
+- name: Clone eclipse.jdt.ls
+  git:
+    repo: https://github.com/eclipse/eclipse.jdt.ls
+    dest: ~/dev/eclipse/eclipse.jdt.ls
+    depth: 1
+    single_branch: true
+- name: Build eclipse.jdt.ls
+  command: ./mvnw -T1C clean install -Dmaven.test.skip=true -Declipse.jdt.ls.skipGradleChecksums
+  environment:
+    JAVA_HOME: "{{ lookup('ansible.builtin.env', 'HOME') }}/.m2/jdks/jdk-{{ jdks_23 }}"
+  args:
+    chdir: ~/dev/eclipse/eclipse.jdt.ls
+
+- name: Clone java-debug
+  git:
+    repo: https://github.com/microsoft/java-debug
+    dest: ~/dev/microsoft/java-debug
+    depth: 1
+    single_branch: true
+    version: main
+- name: Build java-debug
+  command: ./mvnw -T1C clean install -Dmaven.test.skip=true
+  environment:
+    JAVA_HOME: "{{ lookup('ansible.builtin.env', 'HOME') }}/.m2/jdks/jdk-{{ jdks_23 }}"
+  args:
+    chdir: ~/dev/microsoft/java-debug
+
+- name: Clone vscode-java-test
+  git:
+    repo: https://github.com/microsoft/vscode-java-test
+    dest: ~/dev/microsoft/vscode-java-test
+    force: true  # npm commands below modify the package.json
+    version: main
+    single_branch: true
+    depth: 1
+
+- name: Build vscode-java-test
+  command: ./mvnw -T1C clean verify -Dmaven.test.skip=true
+  environment:
+    JAVA_HOME: "{{ lookup('ansible.builtin.env', 'HOME') }}/.m2/jdks/jdk-{{ jdks_23 }}"
+  args:
+    chdir: ~/dev/microsoft/vscode-java-test/java-extension
+
+- name: Create apps folder
+  file:
+    path: ~/apps/
+    state: directory
+    mode: 0700
+
+- name: Create async-profiler folder
+  file:
+    path: ~/apps/async-profiler/
+    state: directory
+    mode: 0700
+
+
+- name: Fetch sjk.jar
+  get_url:
+    url: https://search.maven.org/remotecontent?filepath=org/gridkit/jvmtool/sjk/0.21/sjk-0.21.jar
+    dest: ~/apps/sjk.jar
+
+- name: Get and unpack async-profiler
+  unarchive:
+    src: https://github.com/async-profiler/async-profiler/releases/download/v3.0/async-profiler-3.0-linux-x64.tar.gz
+    dest: ~/apps/async-profiler/
+    remote_src: true
+    creates: ~/apps/async-profiler/bin/asprof
+    extra_opts:
+      - --strip-components=1
+
+- name: Symlink asprof
+  ansible.builtin.file:
+    state: link
+    src: ~/apps/async-profiler/bin/asprof
+    dest: ~/bin/asprof
+
+- name: Get jfr converter
+  get_url:
+    url: https://github.com/jvm-profiling-tools/async-profiler/releases/download/v3.0/converter.jar
+    dest: ~/apps/converter.jar
+
+
+- name: Create jmc folder
+  file:
+    path: ~/apps/jmc/
+    state: directory
+    mode: 0700
+
+- name: Get and unpack jmc
+  unarchive:
+    src: https://github.com/adoptium/jmc-build/releases/download/9.0.0/org.openjdk.jmc-9.0.0-linux.gtk.x86_64.tar.gz
+    dest: ~/apps/jmc/
+    remote_src: true
+    creates: ~/apps/jmc/bin/jmc
+    extra_opts:
+      - --strip-components=1
+
+- name: Create jmc launcher
+  ansible.builtin.copy:
+    content: |
+      #!/usr/bin/env bash
+      set -Eeuo pipefail
+      PATH=$JAVA_HOME/bin:$PATH ~/apps/jmc/jmc
+    dest: ~/bin/jmc
+    mode: "755"
+
+- name: Clone vscode-java-decompiler
+  git:
+    repo: https://github.com/dgileadi/vscode-java-decompiler
+    dest: ~/dev/dgileadi/vscode-java-decompiler
+    single_branch: true
+    depth: 1
+
+
+- name: Create mcs folder
+  ansible.builtin.file:
+    state: directory
+    recurse: true
+    path: ~/apps/mcs/
+
+- name: Download mcs
+  ansible.builtin.unarchive:
+    src: https://github.com/mthmulders/mcs/releases/download/v0.7.0/mcs-0.7.0-linux-x86_64.tar.gz
+    dest: ~/apps/mcs/
+    remote_src: true
+    creates: ~/apps/mcs/bin
+    extra_opts:
+      - --strip-components=1
+
+- name: Create symlink for mcs
+  ansible.builtin.file:
+    src: ~/apps/mcs/bin/mcs
+    dest: ~/bin/mcs
+    state: link
+

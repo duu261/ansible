@@ -1,0 +1,11 @@
+---
+- name: Create ~/.local/share/nvim
+  ansible.builtin.file:
+    state: directory
+    recurse: true
+    path: ~/.local/share/nvim
+
+- name: Fetch mthesaur words
+  get_url:
+    url: https://raw.githubusercontent.com/words/moby/master/words.txt
+    dest: ~/.local/share/nvim/mthesaur.txt

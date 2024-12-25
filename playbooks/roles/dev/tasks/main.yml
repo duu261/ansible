@@ -1,0 +1,52 @@
+---
+- name: Install dev packages
+  become: true
+  ansible.builtin.package:
+    state: present
+    name:
+      - base-devel
+      - jq
+      - yq
+      - unzip
+      - wget
+      - ripgrep
+      - fd
+      - github-cli
+      - luarocks
+      - lua51
+      - ninja
+      - jdk8-openjdk
+      - htop
+      - npm
+      - starship
+      - fzf
+      - zoxide
+      - vivid
+      - bat
+      - eza
+      - tealdeer
+      - lazygit
+      - yazi
+
+- name: Install yazi flavors
+  become: true
+  command: ya pack -a yazi-rs/flavors:catppuccin-macchiato
+- name: Install bat flavors
+  become: true
+  command: bat cache --build
+# - name: Install linters
+#   become: true
+#   ansible.builtin.package:
+#     state: present
+#     name:
+#       - codespell
+#       - shellcheck
+
+- name: Install yay
+  aur:
+    name: yay-bin
+# - name: Install tools
+#   aur:
+#     name:
+#       - readability-cli
+#       - hadolint-bin

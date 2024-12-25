@@ -1,0 +1,25 @@
+---
+- name: Clone neovim
+  git:
+    repo: https://github.com/neovim/neovim
+    dest: ~/dev/neovim/neovim
+    update: false
+
+- name: Install neovim build dependencies
+  become: true
+  pacman:
+    name:
+      - cmake
+      - ninja
+
+      # for gen_vimdoc.py:
+      - python-msgpack
+      - doxygen
+
+- name: Build neovim
+  command: make
+  environment:
+    CMAKE_BUILD_TYPE: RelWithDebInfo
+  args:
+    chdir: ~/dev/neovim/neovim
+    creates: ~/dev/neovim/neovim/build/bin/nvim

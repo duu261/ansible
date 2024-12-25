@@ -1,0 +1,33 @@
+---
+- name: Install desktop essentials
+  become: true
+  ansible.builtin.package:
+    state: present
+    name:
+      - openssh
+      - wezterm
+      - qutebrowser
+      - pass
+
+- name: Install audio packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - alsa-utils
+      - pipewire-pulse
+      - pavucontrol
+
+- name: Install fonts
+  become: true
+  ansible.builtin.package:
+    name:
+      - ttf-firacode-nerd
+      - noto-fonts
+      - noto-fonts-emoji
+      - ttf-roboto
+      - ttf-hack
+
+# - name: Install i3status-rust
+#   become: false
+#   aur:
+#     name: i3status-rust-git
