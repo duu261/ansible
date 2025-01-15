@@ -27,6 +27,7 @@
       - tealdeer
       - lazygit
       - yazi
+      - tmux
 
 - name: Install yazi flavors
   become: true

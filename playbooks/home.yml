@@ -4,7 +4,7 @@
   roles:
     - vim
     - tools
-    # - zsh-plugins
+    - zsh-plugins
     - git-setup
     - jdks
     - lang-java
