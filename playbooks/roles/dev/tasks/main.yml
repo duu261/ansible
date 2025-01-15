@@ -15,7 +15,7 @@
       - luarocks
       - lua51
       - ninja
-      - jdk8-openjdk
+      - jdk17-openjdk
       - htop
       - npm
       - starship
