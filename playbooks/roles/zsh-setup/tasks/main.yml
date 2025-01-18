@@ -6,14 +6,6 @@
     name:
       - zsh
 
-- name: Add zsh to /etc/shells if necessary
-  become: true
-  lineinfile:
-    path: /etc/shells
-    line: "{{ lookup('pipe', 'which zsh') }}"
-    create: yes
-    state: present
-
 - name: Change shell to zsh
   become: true
-  shell: chsh -s $(which zsh) duu
+  shell: chsh -s $(command -v zsh) duu

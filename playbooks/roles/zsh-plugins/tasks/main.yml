@@ -1,4 +1,10 @@
 ---
+- name: Ensure zsh plugins folder exists
+  ansible.builtin.file:
+    path: ~/.zsh/plugins
+    state: directory
+    recurse: true
+
 - name: Fetch zsh plugins
   get_url:
     url: "{{ item }}"

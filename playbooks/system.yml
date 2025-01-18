@@ -3,6 +3,7 @@
   gather_facts: true
   roles:
     - ssh-setup
-    - stow
+    - git-setup
+    - zsh-setup
     - dev
     - desktop

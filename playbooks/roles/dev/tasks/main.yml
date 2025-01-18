@@ -6,6 +6,8 @@
     name:
       - base-devel
       - jq
+      - xdg-user-dirs
+      - neovim
       - yq
       - unzip
       - wget
@@ -22,6 +24,8 @@
       - fzf
       - zoxide
       - vivid
+      - thefuck
+      - tmux
       - bat
       - eza
       - tealdeer
@@ -35,6 +39,8 @@
 - name: Install bat flavors
   become: true
   command: bat cache --build
+- name: Install user dirs
+  command: xdg-user-dirs-update
 # - name: Install linters
 #   become: true
 #   ansible.builtin.package:
