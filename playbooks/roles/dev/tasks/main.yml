@@ -32,6 +32,7 @@
       - lazygit
       - yazi
       - tmux
+      - 7zip
 
 - name: Install yazi flavors
   become: true
